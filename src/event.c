@@ -1,9 +1,9 @@
-#include <event.h>
 #include "internal.h"
+#include <event.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include <string.h>
 
 //Initializies event library
 void init_event()
@@ -57,7 +57,7 @@ event_handle_t *add_event(event_loop_t *loop, loop_func func, void *args)
 			loop->array_info[i].avail=false;
 			return handle;
 		}
-	{
+	}
 	free(handle);
 	return NULL;
 }
@@ -84,8 +84,8 @@ int run_loop(event_loop_t *loop, int loop_run_mode)
 	{
 		for(int i=0;i<256;i++)
 		{
-			if(loop->array_info[i]==true){
-				loop->handle_array[i]->func(loop->handle_array[i], loop->handle_array[i]->args);
+			if(loop->array_info[i].avail==true){
+				loop->handle_array[i]->lpfunc(loop->handle_array[i], loop->handle_array[i]->args);
 			}
 		}
 	}

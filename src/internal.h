@@ -1,7 +1,15 @@
 #ifndef INTERNAL_H
 #define INTERNAL_H
 #include <stdbool.h>
-#include <event.h>
+
+typedef struct{
+        bool avail;
+}ar_info_t;
+
+typedef struct event_loop_t event_loop_t;
+typedef struct event_handle_t event_handle_t;
+
+typedef void (*loop_func)(event_handle_t*, void*);
 
 struct event_loop_t{
 	event_handle_t *handle_array[256];
@@ -18,8 +26,4 @@ struct event_handle_t{
 };
 
 
-
-typedef struct{
-	bool avail;
-}ar_info_t;
 #endif
