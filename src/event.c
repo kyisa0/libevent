@@ -22,6 +22,7 @@ event_loop_t *new_loop()
 		return NULL;
 	}
 	memset(p, 0, sizeof(p));
+	p->loop_stop_flag=false;
 	return p;
 }
 
@@ -51,24 +52,41 @@ event_handle_t *add_event(event_loop_t *loop, loop_func func, void *args)
 	{
 		if(loop->array_info[i].avail==true)
 		{
+			handle->id=i;
 			loop->handle_array[i]=handle;
 			loop->array_info[i].avail=false;
 			return handle;
 		}
-		else if(i==255 && loop->array_info[i].avail==false)
-		{
-			free(handle);
-			return NULL;
-		}
 	{
+	free(handle);
+	return NULL;
 }
 
 void remove_event(event_loop_t *loop, event_handle_t *handle)
 {
+	if(loop==NULL)
+	{
+		return;
+	}
+	if(handle==NULL)
+	{
+		return;
+	}
+	loop->array_info[handle->id].avail=true;
+	free(handle);
+	return;
 
 }
 
 int run_loop(event_loop_t *loop, int loop_run_mode)
 {
-
+	while(!loop->loop_stop_flag)
+	{
+		for(int i=0;i<256;i++)
+		{
+			if(loop->array_info[i]==true){
+				loop->handle_array[i]->func(loop->handle_array[i], loop->handle_array[i]->args);
+			}
+		}
+	}
 }
