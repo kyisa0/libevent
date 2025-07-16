@@ -21,7 +21,10 @@ event_loop_t *new_loop()
 	{
 		return NULL;
 	}
-	memset(p, 0, sizeof(p));
+	for(int i=0;i<256;i++)
+	{
+		p->array_info[i].avail=true;
+	}
 	p->loop_stop_flag=false;
 	return p;
 }
@@ -45,7 +48,6 @@ event_handle_t *add_event(event_loop_t *loop, loop_func func, void *args)
 	{
 		return NULL;
 	}
-	memset(handle, 0, sizeof(handle));
 	handle->lpfunc=func;
 	handle->args=args;
 	for(int i=0;i<256;i++)
@@ -53,7 +55,7 @@ event_handle_t *add_event(event_loop_t *loop, loop_func func, void *args)
 		if(loop->array_info[i].avail==true)
 		{
 			handle->id=i;
-			loop->handle_array[i]=handle;
+			loop->handle_array[i]=handle; // problem here
 			loop->array_info[i].avail=false;
 			return handle;
 		}
@@ -84,7 +86,7 @@ int run_loop(event_loop_t *loop, int loop_run_mode)
 	{
 		for(int i=0;i<256;i++)
 		{
-			if(loop->array_info[i].avail==true){
+			if(loop->array_info[i].avail==false){
 				loop->handle_array[i]->lpfunc(loop->handle_array[i], loop->handle_array[i]->args);
 			}
 		}
